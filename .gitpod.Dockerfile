@@ -1,14 +1,14 @@
 FROM gitpod/workspace-base
 
 # Install dependencies *You don't need all of them
-RUN apt-get update -y \
-    && apt-get upgrade -y \
-    && apt-get install -y git jq bc make automake \
-    && apt-get install -y rsync htop curl build-essential \
-    && apt-get install -y pkg-config libffi-dev libgmp-dev \
-    && apt-get install -y libssl-dev libtinfo-dev libsystemd-dev \
-    && apt-get install -y zlib1g-dev make g++ wget libncursesw5 libtool autoconf \
-    && apt-get clean
+RUN sudo apt-get update -y \
+    && sudo apt-get upgrade -y \
+    && sudo apt-get install -y git jq bc make automake \
+    && sudo apt-get install -y rsync htop curl build-essential \
+    && sudo apt-get install -y pkg-config libffi-dev libgmp-dev \
+    && sudo apt-get install -y libssl-dev libtinfo-dev libsystemd-dev \
+    && sudo apt-get install -y zlib1g-dev make g++ wget libncursesw5 libtool autoconf \
+    && sudo apt-get clean
 
 # Install ghcup
 ENV BOOTSTRAP_HASKELL_NONINTERACTIVE=1
