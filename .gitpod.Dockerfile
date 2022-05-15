@@ -1,19 +1,39 @@
 FROM gitpod/workspace-base
 
-# Install dependencies *You don't need all of them
-RUN sudo apt-get update -y \
-    && sudo apt-get upgrade -y \
-    && sudo apt-get install -y git jq bc make automake \
-    && sudo apt-get install -y rsync htop curl build-essential \
-    && sudo apt-get install -y pkg-config libffi-dev libgmp-dev \
-    && sudo apt-get install -y libssl-dev libtinfo-dev libsystemd-dev \
-    && sudo apt-get install -y zlib1g-dev make g++ wget libncursesw5 libtool autoconf \
-    && sudo apt-get clean
+# install dependencies
+RUN \
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        libnuma-dev \
+        zlib1g-dev \
+        libgmp-dev \
+        libgmp10 \
+        git \
+        wget \
+        lsb-release \
+        software-properties-common \
+        gnupg2 \
+        apt-transport-https \
+        gcc \
+        autoconf \
+        automake \
+        build-essential
 
-# Install ghcup
-ENV BOOTSTRAP_HASKELL_NONINTERACTIVE=1
-RUN bash -c "curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh"
+# install gpg keys
+ARG GPG_KEY=7784930957807690A66EBDBE3786C5262ECB4A3F
+RUN gpg --batch --keyserver keys.openpgp.org --recv-keys $GPG_KEY
 
-# Add ghcup to PATH
-ENV PATH=${PATH}:/root/.local/bin
-ENV PATH=${PATH}:/root/.ghcup/bin
+# install ghcup
+RUN \
+    curl https://downloads.haskell.org/~ghcup/x86_64-linux-ghcup > /usr/bin/ghcup && \
+    chmod +x /usr/bin/ghcup && \
+    ghcup config set gpg-setting GPGStrict
+
+ARG GHC=8.10.7
+ARG CABAL=latest
+
+# install GHC and cabal
+RUN \
+    ghcup -v install ghc --isolate /usr/local --force ${GHC} && \
+    ghcup -v install cabal --isolate /usr/local/bin --force ${CABAL}
